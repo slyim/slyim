@@ -1,7 +1,8 @@
 from pathlib import Path
 from datetime import date, timedelta
-import json
+from html.parser import HTMLParser
 import os
+import re
 import urllib.request
 
 from PIL import Image, ImageDraw, ImageFont
@@ -49,48 +50,43 @@ FALLBACK_CONTRIBUTIONS = dict([
 ])
 
 
-def load_contributions() -> tuple[dict[str, int], int, str]:
-    token = os.environ.get("GITHUB_TOKEN")
-    if not token:
-        return FALLBACK_CONTRIBUTIONS, 266, "2026-08-10"
+class ContributionParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.days: dict[str, int] = {}
+        self.text: list[str] = []
 
-    today = date.today()
-    start = today - timedelta(days=365)
-    query = """
-    query($login: String!, $from: DateTime!, $to: DateTime!) {
-      user(login: $login) {
-        contributionsCollection(from: $from, to: $to) {
-          contributionCalendar {
-            totalContributions
-            weeks { contributionDays { date contributionLevel } }
-          }
-        }
-      }
-    }
-    """
-    levels = {"NONE": 0, "FIRST_QUARTILE": 1, "SECOND_QUARTILE": 2, "THIRD_QUARTILE": 3, "FOURTH_QUARTILE": 4}
-    body = json.dumps({
-        "query": query,
-        "variables": {
-            "login": "slyim",
-            "from": f"{start.isoformat()}T00:00:00Z",
-            "to": f"{today.isoformat()}T23:59:59Z",
-        },
-    }).encode()
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        values = dict(attrs)
+        if tag == "td" and values.get("data-date") and values.get("data-level") is not None:
+            self.days[values["data-date"]] = int(values["data-level"])
+
+    def handle_data(self, data: str) -> None:
+        self.text.append(data)
+
+
+def parse_contributions(source: str) -> tuple[dict[str, int], int, str]:
+    parser = ContributionParser()
+    parser.feed(source)
+    match = re.search(r"([\d,]+) contributions? in the last year", " ".join(parser.text))
+    if not parser.days or not match:
+        raise RuntimeError("GitHub contribution calendar was not found")
+    active = {day: level for day, level in parser.days.items() if level}
+    return active, int(match.group(1).replace(",", "")), max(parser.days)
+
+
+def load_contributions() -> tuple[dict[str, int], int, str]:
+    if os.environ.get("PROFILE_OFFLINE"):
+        return FALLBACK_CONTRIBUTIONS, 266, "2026-08-10"
     request = urllib.request.Request(
-        "https://api.github.com/graphql",
-        data=body,
-        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+        "https://github.com/users/slyim/contributions",
+        headers={"User-Agent": "slyim-profile-renderer", "Accept-Language": "en-US"},
     )
     with urllib.request.urlopen(request, timeout=30) as response:
-        calendar = json.load(response)["data"]["user"]["contributionsCollection"]["contributionCalendar"]
-    contributions = {
-        day["date"]: levels[day["contributionLevel"]]
-        for week in calendar["weeks"]
-        for day in week["contributionDays"]
-        if day["contributionLevel"] != "NONE"
-    }
-    return contributions, calendar["totalContributions"], today.isoformat()
+        return parse_contributions(response.read().decode())
+
+
+assert parse_contributions('<h2>266 contributions in the last year</h2><td data-date="2026-08-10" data-level="4"></td>') == ({"2026-08-10": 4}, 266, "2026-08-10")
 
 
 CONTRIBUTIONS, CONTRIBUTION_TOTAL, UPDATED = load_contributions()
