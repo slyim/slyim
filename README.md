@@ -1,28 +1,38 @@
-<img src="./banner.svg" alt="LILA — Product Designer and Creative Developer" width="100%">
-
 <p align="center">
-  <a href="https://liladesign.dev"><img src="https://img.shields.io/badge/EXPLORE_THE_PORTFOLIO-D0FF00?style=for-the-badge&logoColor=0A0A0A" alt="Explore liladesign.dev"></a>
+  <a href="https://liladesign.dev">
+    <img src="./ascii-banner.gif" alt="Animated ASCII banner for Lila, product designer and creative developer" width="100%">
+  </a>
 </p>
 
-## Design that feels alive.
+```text
+++ ABOUT +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|                                                               |
+|  LILA AYDIN                                                   |
+|  PRODUCT DESIGNER / CREATIVE DEVELOPER                        |
+|  ISTANBUL, TURKEY                                             |
+|                                                               |
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+```
 
-I’m Lila — a product designer and creative developer in Istanbul. I shape expressive digital experiences across product design, creative coding, web, photography, art, and sound.
+I design digital products and build websites. My work includes interface design, front-end development, creative coding, photography, art, and sound.
 
-### Selected practice
+```text
+$ CURRENT
 
-- **Product & UX design** — thoughtful flows, clear systems, memorable interfaces
-- **Creative development** — Vue 3, Vite, and p5.js
-- **Visual storytelling** — art direction, photography, and editorial experiences
-- **Independent work** — currently designing and developing [Misafir Kitabevi](https://misafirkitabevi.com/)
+  MISAFIR KITABEVI
+  E-COMMERCE / WEB DESIGN / DEVELOPMENT
 
-<p align="center">
-  <strong>See the work, process, and experiments at <a href="https://liladesign.dev">liladesign.dev</a></strong>
-</p>
+$ CODE
 
-<p align="center">
-  <a href="https://www.instagram.com/violilygirl/">Instagram</a> ·
-  <a href="https://dribbble.com/Shylesiana">Dribbble</a> ·
-  <a href="mailto:shylesian@gmail.com">Email</a>
-</p>
+  VUE 3 / VITE / P5.JS
 
-<p align="center"><sub>Rooted in curiosity. Growing through craft.</sub></p>
+$ LANGUAGES
+
+  ENGLISH / GERMAN / TURKISH
+```
+
+```text
++ LINKS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+```
+
+[WEBSITE](https://liladesign.dev) / [INSTAGRAM](https://www.instagram.com/violilygirl/) / [DRIBBBLE](https://dribbble.com/Shylesiana) / [EMAIL](mailto:shylesian@gmail.com)
