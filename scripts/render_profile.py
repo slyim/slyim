@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-OUT = (SCRIPT_DIR.parent if SCRIPT_DIR.name == "scripts" else SCRIPT_DIR) / "ascii-profile.gif"
+OUT = (SCRIPT_DIR.parent if SCRIPT_DIR.name == "scripts" else SCRIPT_DIR) / "ascii-profile.png"
 W, H = 1200, 1120
 ROWS, COLS = 51, 116
 X, Y, LINE = 31, 28, 21
@@ -249,11 +249,14 @@ frames = [make_frame(125), *(make_frame(step) for step in steps), make_frame(125
 durations = [1100, *([70] * len(steps)), 1100]
 frames[0].save(
     OUT,
+    format="PNG",
     save_all=True,
     append_images=frames[1:],
     duration=durations,
+    loop=1,
     optimize=True,
-    disposal=2,
+    disposal=0,
+    blend=0,
 )
 assert OUT.exists() and OUT.stat().st_size > 10_000
 print(OUT)
