@@ -25,7 +25,7 @@ jobs:
       - name: Render current contribution data
         run: python scripts/render_profile.py
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROFILE_TOKEN: ${{ secrets.PROFILE_TOKEN }}
       - name: Publish changes
         run: |
           git config user.name "github-actions[bot]"
